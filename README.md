@@ -23,7 +23,7 @@
 
 ### Installation
 
-1. Clone the repo
+1. Clone the repo.
 2. Start MongoDB and Redis:
    ```bash
    docker-compose up -d
@@ -37,7 +37,7 @@
    ```
 
 ### Environment
-The backend loads `backend/.env` using `dotenv`.
+The backend uses `dotenv` and loads configuration from `backend/.env`.
 
 Create a backend `.env` file with values like:
 ```env
@@ -47,17 +47,16 @@ REDIS_URL=redis://localhost:6379
 GROQ_API_KEY=your-groq-api-key
 ```
 
-A sample example file is available at `backend/.env.example`.
+A sample file is also available at `backend/.env.example`.
 
 ### Ports and routing
 - Backend: `http://localhost:5005`
 - Frontend: `http://localhost:3000`
 
-The frontend proxy is configured in `frontend/next.config.js` to forward `/api/*` to the backend on port `5005`.
+The frontend proxy is configured in `frontend/next.config.js` to forward `/api/*` to the backend at port `5005`.
+The WebSocket client connects to `ws://localhost:5005` in `frontend/hooks/UseWebSocket.ts`.
 
-The WebSocket client also connects to `ws://localhost:5005` in `frontend/hooks/UseWebSocket.ts`.
-
-If your backend port is different, update both:
+If your backend port is different, update all of:
 - `backend/.env` (`PORT`)
 - `frontend/next.config.js` rewrite destination
 - `frontend/hooks/UseWebSocket.ts` WebSocket URL
