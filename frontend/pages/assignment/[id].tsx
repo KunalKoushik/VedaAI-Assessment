@@ -65,8 +65,56 @@ function DifficultyBadge({ difficulty }: { difficulty: string }) {
 }
 
 // ── PDF Download util ──────────────────────────────────────────────
-function printPaper() {
-  window.print();
+function printPaper(el?: HTMLElement | null) {
+  // If no element provided, fall back to default print
+  if (!el) return window.print();
+
+  // Open a new window and write only the paper content into it.
+  // Copy existing styles so Tailwind and app styles apply in the print preview.
+  const win = window.open('', '_blank', 'width=900,height=700');
+  if (!win) return window.print();
+
+  // Clone the element so we can replace inputs with their values for printing
+  const clone = el.cloneNode(true) as HTMLElement;
+  clone.querySelectorAll('input, textarea').forEach((node) => {
+    const n = node as HTMLInputElement | HTMLTextAreaElement;
+    const span = document.createElement('span');
+    span.textContent = n.value || n.placeholder || '';
+    node.parentNode?.replaceChild(span, node);
+  });
+
+  const headHtml = Array.from(document.querySelectorAll('link[rel="stylesheet"], style'))
+    .map((n) => n.outerHTML)
+    .join('\n');
+
+  // Inject override print styles to ensure the cloned content is visible
+  const overrideStyles = `
+    <style>
+      @media print {
+        body * { visibility: visible !important; }
+        aside, header, button, a { display: none !important; }
+        .print\\:shadow-none { position: static !important; visibility: visible !important; width: auto !important; left: auto !important; top: auto !important; }
+      }
+      body { background: #fff; color: #000; }
+    </style>`;
+
+  win.document.open();
+  win.document.write(`<!doctype html><html><head><meta charset="utf-8">${headHtml}\n${overrideStyles}
+    <style>@page{size:auto;margin:20mm} body{background:#fff}</style></head><body>
+    ${clone.outerHTML}
+    </body></html>`);
+  win.document.close();
+  win.focus();
+
+  // Give the new window a moment to load fonts/images before printing
+  setTimeout(() => {
+    try {
+      win.print();
+      win.close();
+    } catch (e) {
+      console.error('Print failed', e);
+    }
+  }, 700);
 }
 
 // ── Main Output Page ───────────────────────────────────────────────
@@ -261,7 +309,7 @@ export default function AssignmentOutput() {
               {questionPaper.subject} – Class {questionPaper.className} students.
             </p>
             <button
-              onClick={printPaper}
+              onClick={() => printPaper(printRef.current)}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white border border-white/20 hover:bg-white/10 transition-colors flex-shrink-0"
             >
               <Download size={15} />
@@ -415,7 +463,7 @@ export default function AssignmentOutput() {
                 Regenerate
               </button>
               <button
-                onClick={printPaper}
+                onClick={() => printPaper(printRef.current)}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white transition-all hover:opacity-90"
                 style={{ background: '#111' }}
               >
