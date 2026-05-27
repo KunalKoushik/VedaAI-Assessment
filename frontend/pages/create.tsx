@@ -235,141 +235,142 @@ export default function CreateAssignment() {
         <main className="flex-1 px-4 pb-32 sm:px-6 lg:px-10">
           <div className="max-w-4xl mx-auto">
             <form onSubmit={handleSubmit}>
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-7 max-w-3xl">
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-7 max-w-3xl">
 
-              <div className="mb-6">
-                <h2 className="text-base font-bold text-gray-900">Assignment Details</h2>
-                <p className="text-xs text-gray-400 mt-0.5">Basic information about your assignment</p>
-              </div>
+                <div className="mb-6">
+                  <h2 className="text-base font-bold text-gray-900">Assignment Details</h2>
+                  <p className="text-xs text-gray-400 mt-0.5">Basic information about your assignment</p>
+                </div>
 
-              {/* File Upload */}
-              <div className="mb-6">
-                <FileUploadZone
-                  file={uploadedFile}
-                  onFile={setUploadedFile}
-                  onClear={() => setUploadedFile(null)}
-                />
-              </div>
-
-              {/* Subject + Class */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Subject</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Science"
-                    value={formData.subject}
-                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 bg-gray-50 transition-all"
+                {/* File Upload */}
+                <div className="mb-6">
+                  <FileUploadZone
+                    file={uploadedFile}
+                    onFile={setUploadedFile}
+                    onClear={() => setUploadedFile(null)}
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Class</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 8th"
-                    value={formData.className}
-                    onChange={(e) => setFormData({ ...formData, className: e.target.value })}
-                    className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 bg-gray-50 transition-all"
-                  />
-                </div>
-              </div>
 
-              {/* Due Date */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Due Date</label>
-                <input
-                  type="date"
-                  required
-                  value={formData.dueDate}
-                  onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
-                  className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 bg-gray-50 transition-all appearance-none"
-                />
-              </div>
-
-              {/* Question Types */}
-              <div className="mb-6">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm font-semibold text-gray-800">Question Type</span>
-                  <div className="flex items-center gap-8 pr-2">
-                    <span className="text-xs font-medium text-gray-500">No. of Questions</span>
-                    <span className="text-xs font-medium text-gray-500">Marks</span>
+                {/* Subject + Class */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Subject</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Science"
+                      value={formData.subject}
+                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                      className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 bg-gray-50 transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Class</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. 8th"
+                      value={formData.className}
+                      onChange={(e) => setFormData({ ...formData, className: e.target.value })}
+                      className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 bg-gray-50 transition-all"
+                    />
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  {formData.questionTypes.map((qt, i) => (
-                    <div key={i} className="flex items-center gap-3">
-                      <div className="relative flex-1">
-                        <select
-                          value={qt.type}
-                          onChange={(e) => updateQT(i, 'type', e.target.value)}
-                          className="w-full appearance-none pl-4 pr-9 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 cursor-pointer"
-                        >
-                          {QUESTION_TYPE_OPTIONS.map((opt) => (
-                            <option key={opt} value={opt}>{opt}</option>
-                          ))}
-                        </select>
-                        <ChevronDown size={13} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-                      </div>
+                {/* Due Date */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Due Date</label>
+                  <input
+                    type="date"
+                    required
+                    value={formData.dueDate}
+                    onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
+                    className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 bg-gray-50 transition-all appearance-none"
+                  />
+                </div>
 
-                      <button
-                        type="button"
-                        onClick={() => removeQuestionType(i)}
-                        className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-100 hover:bg-red-100 text-gray-400 hover:text-red-500 transition-colors flex-shrink-0"
-                      >
-                        <X size={12} />
-                      </button>
-
-                      <Stepper value={qt.numberOfQuestions} onChange={(v) => updateQT(i, 'numberOfQuestions', v)} />
-                      <Stepper value={qt.marksPerQuestion} onChange={(v) => updateQT(i, 'marksPerQuestion', v)} />
+                {/* Question Types */}
+                <div className="mb-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-semibold text-gray-800">Question Type</span>
+                    <div className="flex items-center gap-8 pr-2">
+                      <span className="text-xs font-medium text-gray-500">No. of Questions</span>
+                      <span className="text-xs font-medium text-gray-500">Marks</span>
                     </div>
-                  ))}
-                </div>
-
-                <button
-                  type="button"
-                  onClick={addQuestionType}
-                  className="mt-4 flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
-                >
-                  <div className="w-6 h-6 rounded-full bg-gray-900 flex items-center justify-center flex-shrink-0">
-                    <Plus size={13} className="text-white" />
                   </div>
-                  Add Question Type
-                </button>
 
-                {totalQuestions > 0 && (
-                  <div className="mt-4 flex flex-col items-end gap-0.5 text-sm font-medium text-gray-700">
-                    <span>Total Questions : {totalQuestions}</span>
-                    <span>Total Marks : {totalMarks}</span>
+                  <div className="space-y-3">
+                    {formData.questionTypes.map((qt, i) => (
+                      <div key={i} className="flex items-center gap-3">
+                        <div className="relative flex-1">
+                          <select
+                            value={qt.type}
+                            onChange={(e) => updateQT(i, 'type', e.target.value)}
+                            className="w-full appearance-none pl-4 pr-9 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 cursor-pointer"
+                          >
+                            {QUESTION_TYPE_OPTIONS.map((opt) => (
+                              <option key={opt} value={opt}>{opt}</option>
+                            ))}
+                          </select>
+                          <ChevronDown size={13} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => removeQuestionType(i)}
+                          className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-100 hover:bg-red-100 text-gray-400 hover:text-red-500 transition-colors flex-shrink-0"
+                        >
+                          <X size={12} />
+                        </button>
+
+                        <Stepper value={qt.numberOfQuestions} onChange={(v) => updateQT(i, 'numberOfQuestions', v)} />
+                        <Stepper value={qt.marksPerQuestion} onChange={(v) => updateQT(i, 'marksPerQuestion', v)} />
+                      </div>
+                    ))}
                   </div>
-                )}
-              </div>
 
-              {/* Additional Instructions */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-800 mb-2">
-                  Additional Information <span className="text-gray-400 font-normal">(For better output)</span>
-                </label>
-                <div className="relative">
-                  <textarea
-                    rows={4}
-                    value={formData.additionalInstructions}
-                    onChange={(e) => setFormData({ ...formData, additionalInstructions: e.target.value })}
-                    placeholder="e.g Generate a question paper for 3 hour exam duration..."
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 bg-gray-50 resize-none transition-all"
-                  />
                   <button
                     type="button"
-                    className="absolute right-3 bottom-3 w-7 h-7 flex items-center justify-center rounded-full bg-white border border-gray-200 hover:bg-gray-50 text-gray-400 shadow-sm"
+                    onClick={addQuestionType}
+                    className="mt-4 flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
                   >
-                    <Mic size={13} />
+                    <div className="w-6 h-6 rounded-full bg-gray-900 flex items-center justify-center flex-shrink-0">
+                      <Plus size={13} className="text-white" />
+                    </div>
+                    Add Question Type
                   </button>
+
+                  {totalQuestions > 0 && (
+                    <div className="mt-4 flex flex-col items-end gap-0.5 text-sm font-medium text-gray-700">
+                      <span>Total Questions : {totalQuestions}</span>
+                      <span>Total Marks : {totalMarks}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Additional Instructions */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-800 mb-2">
+                    Additional Information <span className="text-gray-400 font-normal">(For better output)</span>
+                  </label>
+                  <div className="relative">
+                    <textarea
+                      rows={4}
+                      value={formData.additionalInstructions}
+                      onChange={(e) => setFormData({ ...formData, additionalInstructions: e.target.value })}
+                      placeholder="e.g Generate a question paper for 3 hour exam duration..."
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 bg-gray-50 resize-none transition-all"
+                    />
+                    <button
+                      type="button"
+                      className="absolute right-3 bottom-3 w-7 h-7 flex items-center justify-center rounded-full bg-white border border-gray-200 hover:bg-gray-50 text-gray-400 shadow-sm"
+                    >
+                      <Mic size={13} />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
             </form>
           </div>
+        </main>
 
         {/* Bottom nav bar */}
         <div className="fixed bottom-0 md:left-60 left-0 right-0 bg-white border-t border-gray-100 px-4 py-4 z-10">
@@ -383,20 +384,21 @@ export default function CreateAssignment() {
             </Link>
             <button
               type="submit"
-            disabled={loading}
-            onClick={handleSubmit}
-            className="flex items-center gap-2 px-7 py-2.5 rounded-full text-white text-sm font-semibold transition-all hover:opacity-90 active:scale-95 disabled:opacity-60"
-            style={{ background: loading ? '#555' : '#111', boxShadow: '0 2px 10px rgba(0,0,0,0.2)' }}
-          >
-            {loading ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Generating…
-              </>
-            ) : (
-              <>Next <ArrowRight size={15} /></>
-            )}
-          </button>
+              disabled={loading}
+              onClick={handleSubmit}
+              className="flex items-center gap-2 px-7 py-2.5 rounded-full text-white text-sm font-semibold transition-all hover:opacity-90 active:scale-95 disabled:opacity-60"
+              style={{ background: loading ? '#555' : '#111', boxShadow: '0 2px 10px rgba(0,0,0,0.2)' }}
+            >
+              {loading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Generating…
+                </>
+              ) : (
+                <>Next <ArrowRight size={15} /></>
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>
