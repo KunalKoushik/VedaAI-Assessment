@@ -1,0 +1,139 @@
+import { Request, Response } from 'express';
+import Assignment, { IAssignment, IQuestionType } from '../models/Assignment';
+import mongoose from 'mongoose';
+
+export const createAssignment = async (req: Request, res: Response) => {
+  try {
+    const { title, description, dueDate, questionTypes, additionalInstructions } = req.body;
+    
+    // add inside createAssignment, after destructuring req.body:
+const fileUrl = req.file ? `/uploads/${req.file.filename}` : undefined;
+    // Calculate totals
+    let totalQuestions = 0;
+    let totalMarks = 0;
+    if (questionTypes && Array.isArray(questionTypes)) {
+      questionTypes.forEach((qt: IQuestionType) => {
+        totalQuestions += qt.numberOfQuestions;
+        totalMarks += qt.numberOfQuestions * qt.marksPerQuestion;
+      });
+    }
+    
+    const newAssignment = new Assignment({
+      title,
+      description,
+      dueDate: new Date(dueDate),
+      questionTypes: questionTypes || [],
+      totalQuestions,
+      totalMarks,
+      fileUrl,
+      additionalInstructions,
+      status: 'draft'
+    });
+
+    // At the top of createAssignment, before saving:
+if (!title?.trim()) {
+  return res.status(400).json({ success: false, message: 'Title is required' });
+}
+if (!dueDate) {
+  return res.status(400).json({ success: false, message: 'Due date is required' });
+}
+if (new Date(dueDate) < new Date()) {
+  return res.status(400).json({ success: false, message: 'Due date must be in the future' });
+}
+if (!questionTypes?.length) {
+  return res.status(400).json({ success: false, message: 'At least one question type is required' });
+}
+for (const qt of questionTypes) {
+  if (qt.numberOfQuestions < 1) {
+    return res.status(400).json({ success: false, message: 'Number of questions must be at least 1' });
+  }
+  if (qt.marksPerQuestion < 1) {
+    return res.status(400).json({ success: false, message: 'Marks per question must be at least 1' });
+  }
+}
+
+    
+    const saved = await newAssignment.save();
+    res.status(201).json({ success: true, data: saved });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+
+export const getAssignments = async (req: Request, res: Response) => {
+  try {
+    const assignments = await Assignment.find().sort({ createdAt: -1 });
+    res.status(200).json({ success: true, data: assignments });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+
+export const getAssignmentById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const objectId = new mongoose.Types.ObjectId(id);
+    const assignment = await Assignment.findById(objectId).populate('generatedPaperId');
+    
+    if (!assignment) {
+      return res.status(404).json({ success: false, message: 'Assignment not found' });
+    }
+    
+    console.log('GeneratedPaperId type:', typeof assignment.generatedPaperId);
+    console.log('GeneratedPaperId value:', assignment.generatedPaperId);
+    
+    res.status(200).json({ success: true, data: assignment });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+
+export const updateAssignment = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const updated = await Assignment.findByIdAndUpdate(id, req.body, { new: true });
+    if (!updated) {
+      return res.status(404).json({ success: false, message: 'Assignment not found' });
+    }
+    res.status(200).json({ success: true, data: updated });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+
+export const deleteAssignment = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const deleted = await Assignment.findByIdAndDelete(id);
+    if (!deleted) {
+      return res.status(404).json({ success: false, message: 'Assignment not found' });
+    }
+    res.status(200).json({ success: true, message: 'Assignment deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+// backend/src/controllers/AssignmentController.ts — add at the bottom
+import multer from 'multer';
+import path from 'path';
+
+const storage = multer.diskStorage({
+  destination: 'uploads/',
+  filename: (_, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
+});
+export const upload = multer({
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  fileFilter: (_, file, cb) => {
+    const allowed = ['.pdf', '.txt', '.jpg', '.jpeg', '.png'];
+    const ext = path.extname(file.originalname).toLowerCase();
+    cb(null, allowed.includes(ext));
+  },
+});
