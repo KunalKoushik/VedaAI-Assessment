@@ -27,3 +27,57 @@
 2. Start MongoDB and Redis:
    ```bash
    docker-compose up -d
+   ```
+3. Install dependencies for backend and frontend:
+   ```bash
+   cd backend
+   npm install
+   cd ../frontend
+   npm install
+   ```
+
+### Environment
+The backend loads `backend/.env` using `dotenv`.
+
+Create a backend `.env` file with values like:
+```env
+PORT=5005
+MONGODB_URI=your-mongodb-connection-string
+REDIS_URL=redis://localhost:6379
+GROQ_API_KEY=your-groq-api-key
+```
+
+A sample example file is available at `backend/.env.example`.
+
+### Ports and routing
+- Backend: `http://localhost:5005`
+- Frontend: `http://localhost:3000`
+
+The frontend proxy is configured in `frontend/next.config.js` to forward `/api/*` to the backend on port `5005`.
+
+The WebSocket client also connects to `ws://localhost:5005` in `frontend/hooks/UseWebSocket.ts`.
+
+If your backend port is different, update both:
+- `backend/.env` (`PORT`)
+- `frontend/next.config.js` rewrite destination
+- `frontend/hooks/UseWebSocket.ts` WebSocket URL
+
+### Run
+Open two terminals:
+
+Backend:
+```bash
+cd backend
+npm run dev
+```
+
+Frontend:
+```bash
+cd frontend
+npm run dev
+```
+
+### Troubleshooting
+- If the frontend cannot reach the API, make sure backend is running on port `5005` and `backend/.env` is loaded.
+- If WebSocket updates do not appear, ensure `REDIS_URL` is correct and Redis is running.
+- If `PORT` is missing from `.env`, backend falls back to `5000`, but the frontend expects `5005` by default.
