@@ -41,7 +41,7 @@ The backend uses `dotenv` and loads configuration from `backend/.env`.
 
 Create a backend `.env` file with values like:
 ```env
-PORT=5005
+PORT=5002
 MONGODB_URI=your-mongodb-connection-string
 REDIS_URL=redis://localhost:6379
 GROQ_API_KEY=your-groq-api-key
@@ -50,11 +50,11 @@ GROQ_API_KEY=your-groq-api-key
 A sample file is also available at `backend/.env.example`.
 
 ### Ports and routing
-- Backend: `http://localhost:5005`
+- Backend: `http://localhost:5002`
 - Frontend: `http://localhost:3000`
 
-The frontend proxy is configured in `frontend/next.config.js` to forward `/api/*` to the backend at port `5005`.
-The WebSocket client connects to `ws://localhost:5005` in `frontend/hooks/UseWebSocket.ts`.
+The frontend proxy is configured in `frontend/next.config.js` to forward `/api/*` to the backend at port `5002`.
+The WebSocket client connects to `ws://localhost:5002` in `frontend/hooks/UseWebSocket.ts`.
 
 If your backend port is different, update all of:
 - `backend/.env` (`PORT`)
@@ -77,6 +77,6 @@ npm run dev
 ```
 
 ### Troubleshooting
-- If the frontend cannot reach the API, make sure backend is running on port `5005` and `backend/.env` is loaded.
+- If the frontend cannot reach the API, make sure backend is running on port `5002` and `backend/.env` is loaded.
 - If WebSocket updates do not appear, ensure `REDIS_URL` is correct and Redis is running.
-- If `PORT` is missing from `.env`, backend falls back to `5000`, but the frontend expects `5005` by default.
+- If `PORT` is missing from `.env`, backend falls back to `5000`, but the frontend expects `5002` by default.

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Sidebar from '@/components/Sidebar';
 import TopBar from '@/components/TopBar';
 import {
-  ChevronLeft, Download, RefreshCw, Plus, ChevronDown,
+  ChevronLeft, Download, RefreshCw, ChevronDown,
 } from 'lucide-react';
 
 // ── Types ─────────────────────────────────────────────────────────
@@ -51,7 +51,7 @@ function DifficultyBadge({ difficulty }: { difficulty: string }) {
   );
 }
 
-// ── PDF print util (unchanged from original) ───────────────────────
+// ── PDF print util ───────────────────────
 function printPaper(el?: HTMLElement | null) {
   if (!el) return window.print();
   const win = window.open('', '_blank', 'width=900,height=700');
@@ -275,7 +275,9 @@ export default function AssignmentOutput() {
                           <li key={qi} className="flex items-start gap-3">
                             <span className="text-sm font-semibold text-gray-700 w-7 flex-shrink-0 mt-0.5">{num}.</span>
                             <div className="flex-1 flex items-start justify-between gap-4">
-                              <p className="text-sm text-gray-800 leading-relaxed flex-1">{q.text}</p>
+                              {/* Whitespace pre-wrap added here */}
+                              <p className="text-sm text-gray-800 leading-relaxed flex-1 whitespace-pre-wrap">{q.text}</p>
+                              
                               <div className="flex items-center gap-2 flex-shrink-0">
                                 <DifficultyBadge difficulty={q.difficulty} />
                                 <span className="text-xs font-semibold text-gray-500 whitespace-nowrap">

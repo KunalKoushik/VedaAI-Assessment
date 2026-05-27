@@ -21,18 +21,18 @@ Class: ${params.className}
 Total Marks: ${params.totalMarks}
 ${params.additionalInstructions ? `Additional Instructions: ${params.additionalInstructions}` : ''}
 
-Question Types and Distribution:
+Requested Question Types and Distribution:
 ${params.questionTypes.map(qt => `- ${qt.type}: ${qt.numberOfQuestions} questions, ${qt.marksPerQuestion} marks each`).join('\n')}
 
-Generate a JSON response EXACTLY in this format:
+You MUST generate a JSON response EXACTLY in this format:
 {
   "sections": [
     {
-      "title": "Section A - <Question Type Here>",
+      "title": "Section A - Multiple Choice Questions",
       "instruction": "Attempt all questions",
       "questions": [
         {
-          "text": "Question text here",
+          "text": "What is the powerhouse of the cell?\\nA) Nucleus\\nB) Mitochondria\\nC) Ribosome\\nD) Endoplasmic Reticulum",
           "difficulty": "Easy",
           "marks": 2
         }
@@ -43,14 +43,11 @@ Generate a JSON response EXACTLY in this format:
 }
 
 CRITICAL FORMATTING RULES FOR THE "text" FIELD:
-1. Multiple Choice Questions: You MUST append 4 options (A, B, C, D) directly inside the "text" string, separated by the newline character (\\n). 
-   Example: "What is the powerhouse of the cell?\\nA) Nucleus\\nB) Mitochondria\\nC) Ribosome\\nD) Endoplasmic Reticulum"
-2. Diagram/Graph-Based Questions: Phrase the "text" to either ask the student to DRAW a specific diagram/graph, or ask them to analyze a standard conceptual graph (e.g., "Draw a well-labeled diagram of...").
-3. Fill in the Blanks: Use underscores to represent the blank space. Example: "The chemical formula for water is ________."
-4. Match the question count and marks exactly to the "Question Types and Distribution" provided above. Group identical question types into their own sections.
+1. For "Multiple Choice Questions": You MUST append 4 options (A, B, C, D) directly inside the "text" string, formatted exactly with the newline character (\\n) before each option, exactly like the example above.
+2. For "Diagram/Graph-Based Questions": You MUST explicitly phrase the "text" to ask the student to DRAW or ANALYZE a diagram/graph (e.g., "Draw a well-labeled diagram of the human digestive system.").
+3. For "Fill in the Blanks": You MUST use underscores to represent the blank space (e.g., "The chemical formula for water is ________.").
 
-Difficulty levels: Easy, Moderate, Challenging.
-Distribute difficulties appropriately (approx. 60% Easy, 30% Moderate, 10% Challenging).
+Ensure you match the question count and marks exactly to the "Requested Question Types and Distribution". Group identical question types into their own sections. Distribute difficulties appropriately (approx. 60% Easy, 30% Moderate, 10% Challenging).
 `;
 
   const completion = await groq.chat.completions.create({
@@ -66,7 +63,6 @@ Distribute difficulties appropriately (approx. 60% Easy, 30% Moderate, 10% Chall
   const parsedData = JSON.parse(response);
 
   // SAFETY NET: Prevent Mongoose "Cast to string failed" error on answerKey.
-  // If the LLM disobeys and returns an object/array, we forcefully format it into a pretty string.
   if (parsedData.answerKey && typeof parsedData.answerKey === 'object') {
     parsedData.answerKey = JSON.stringify(parsedData.answerKey, null, 2);
   }

@@ -3,7 +3,7 @@ import redisClient from '../config/Redis';
 import Redis from 'ioredis';
 import Assignment from '../models/Assignment';
 import QuestionPaper from '../models/QuestionPaper';
-import { generateQuestionPaper } from '../services/AiService';
+import { generateQuestionPaper } from '../services/AiService'; // Adjust path if needed
 
 // Separate Redis client for pub/sub
 const redisPub = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {

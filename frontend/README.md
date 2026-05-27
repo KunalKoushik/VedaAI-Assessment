@@ -15,8 +15,8 @@ Then open [http://localhost:3000](http://localhost:3000) in your browser.
 ## Project notes
 
 - The frontend uses the `pages` directory for routing.
-- API calls are proxied to `http://localhost:5005/api/*` via `frontend/next.config.js`.
-- WebSocket events are sent to `ws://localhost:5005` from `frontend/hooks/UseWebSocket.ts`.
+- API calls are proxied to `http://localhost:5002/api/*` via `frontend/next.config.js`.
+- WebSocket events are sent to `ws://localhost:5002` from `frontend/hooks/UseWebSocket.ts`.
 
 ## Repository setup
 
