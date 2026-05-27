@@ -5,7 +5,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://localhost:5002/api/:path*'
+        destination: 'https://vedaai-backend-8419.onrender.com/api/:path*'
       }
     ];
   }
