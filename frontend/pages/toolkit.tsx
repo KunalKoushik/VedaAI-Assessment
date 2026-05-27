@@ -60,7 +60,8 @@ export default function ToolkitPage() {
       <div className="flex-1 md:ml-60 flex flex-col min-h-screen">
         <TopBar backLabel="AI Teacher's Toolkit" />
 
-        <main className="flex-1 px-8 py-7">
+        <main className="flex-1 px-4 py-7 sm:px-6 lg:px-10">
+          <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="flex items-center gap-2.5 mb-1">
             <span className="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm shadow-orange-300" />
@@ -121,6 +122,7 @@ export default function ToolkitPage() {
                 </div>
               </div>
             ))}
+          </div>
           </div>
         </main>
       </div>

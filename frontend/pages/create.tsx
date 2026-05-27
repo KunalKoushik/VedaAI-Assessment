@@ -213,7 +213,7 @@ export default function CreateAssignment() {
       {/* ── Main ────────────────────────────────────────────────── */}
       <div className="flex-1 md:ml-60 flex flex-col min-h-screen">
 
-        <TopBar backHref="/" backLabel="Assignment" />
+        <TopBar backHref="/assignments" backLabel="Assignments" />
 
         {/* Page Title */}
         <div className="px-8 pt-7 pb-2">
@@ -232,8 +232,9 @@ export default function CreateAssignment() {
         </div>
 
         {/* Form */}
-        <main className="flex-1 px-8 pb-32">
-          <form onSubmit={handleSubmit}>
+        <main className="flex-1 px-4 pb-32 sm:px-6 lg:px-10">
+          <div className="max-w-4xl mx-auto">
+            <form onSubmit={handleSubmit}>
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-7 max-w-3xl">
 
               <div className="mb-6">
@@ -251,7 +252,7 @@ export default function CreateAssignment() {
               </div>
 
               {/* Subject + Class */}
-              <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">Subject</label>
                   <input
@@ -367,20 +368,21 @@ export default function CreateAssignment() {
                 </div>
               </div>
             </div>
-          </form>
-        </main>
+            </form>
+          </div>
 
         {/* Bottom nav bar */}
-        <div className="fixed bottom-0 md:left-60 left-0 right-0 bg-white border-t border-gray-100 px-8 py-4 flex items-center justify-between z-10">
-          <Link
-            href="/"
-            className="flex items-center gap-2 px-6 py-2.5 border border-gray-200 rounded-full text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
-          >
-            <ChevronLeft size={15} />
-            Previous
-          </Link>
-          <button
-            type="submit"
+        <div className="fixed bottom-0 md:left-60 left-0 right-0 bg-white border-t border-gray-100 px-4 py-4 z-10">
+          <div className="max-w-4xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <Link
+              href="/assignments"
+              className="flex items-center gap-2 px-6 py-2.5 border border-gray-200 rounded-full text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+            >
+              <ChevronLeft size={15} />
+              Previous
+            </Link>
+            <button
+              type="submit"
             disabled={loading}
             onClick={handleSubmit}
             className="flex items-center gap-2 px-7 py-2.5 rounded-full text-white text-sm font-semibold transition-all hover:opacity-90 active:scale-95 disabled:opacity-60"

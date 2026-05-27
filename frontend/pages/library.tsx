@@ -35,7 +35,8 @@ export default function LibraryPage() {
       <div className="flex-1 md:ml-60 flex flex-col min-h-screen">
         <TopBar backLabel="My Library" />
 
-        <main className="flex-1 px-8 py-7">
+        <main className="flex-1 px-4 py-7 sm:px-6 lg:px-10">
+          <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="flex items-center gap-2.5 mb-1">
             <span className="w-2.5 h-2.5 rounded-full bg-purple-500 shadow-sm shadow-purple-300" />
@@ -46,7 +47,7 @@ export default function LibraryPage() {
           </p>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-6">
             {[
               { icon: FileText, label: 'Total Papers', value: MOCK_PAPERS.length, color: 'text-blue-600' },
               { icon: BookOpen, label: 'Subjects', value: 5, color: 'text-emerald-600' },
@@ -65,8 +66,8 @@ export default function LibraryPage() {
           </div>
 
           {/* Search row */}
-          <div className="flex items-center justify-between mb-5 gap-4">
-            <div className="relative w-72">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-5">
+            <div className="relative flex-1 min-w-0 sm:max-w-xs">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
@@ -148,6 +149,7 @@ export default function LibraryPage() {
                 )}
               </tbody>
             </table>
+          </div>
           </div>
         </main>
       </div>

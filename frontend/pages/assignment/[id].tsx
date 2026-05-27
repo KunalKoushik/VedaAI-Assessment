@@ -150,7 +150,7 @@ export default function AssignmentOutput() {
       <div className="min-h-screen bg-[#F5F5F5] flex font-sans">
         <Sidebar />
         <div className="flex-1 md:ml-60 flex flex-col">
-          <TopBar backHref="/" backLabel="Assignment" />
+          <TopBar backHref="/assignments" backLabel="Assignments" />
           <div className="flex-1 flex items-center justify-center p-8">
             <div className="bg-white rounded-2xl border border-amber-200 p-10 text-center max-w-md shadow-sm">
               <div className="w-14 h-14 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -181,13 +181,21 @@ export default function AssignmentOutput() {
       <Sidebar />
 
       <div className="flex-1 md:ml-60 flex flex-col">
-        <TopBar backHref="/" breadcrumb={<><Plus size={14} className="text-gray-300 inline mr-1" />Create New</>} />
+        <TopBar backHref="/assignments" backLabel="Assignments" />
 
-        <main className="flex-1 px-8 py-7">
+        <main className="flex-1 px-4 py-7 sm:px-6 lg:px-10">
+          <div className="max-w-6xl mx-auto">
+            <div className="mb-6">
+              <div className="flex items-center gap-2.5 mb-1">
+                <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-sm shadow-blue-300" />
+                <h1 className="text-xl font-bold text-gray-900">Question Paper Preview</h1>
+              </div>
+              <p className="text-sm text-gray-400 pl-5">Review and download the generated question paper for your class.</p>
+            </div>
 
           {/* AI Banner */}
           <div
-            className="rounded-2xl p-5 mb-6 flex items-center justify-between gap-6"
+            className="rounded-2xl p-5 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
             style={{ background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)' }}
           >
             <p className="text-white text-sm leading-relaxed font-medium flex-1">
@@ -196,7 +204,7 @@ export default function AssignmentOutput() {
             </p>
             <button
               onClick={() => printPaper(printRef.current)}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white border border-white/20 hover:bg-white/10 transition-colors flex-shrink-0"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white border border-white/20 hover:bg-white/10 transition-colors"
             >
               <Download size={15} />
               Download as PDF
@@ -204,7 +212,7 @@ export default function AssignmentOutput() {
           </div>
 
           {/* Question Paper Card */}
-          <div ref={printRef} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden print:shadow-none">
+          <div ref={printRef} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden print:shadow-none max-w-5xl mx-auto">
 
             {/* School Header */}
             <div className="px-10 pt-10 pb-6 text-center border-b border-gray-100">
@@ -225,7 +233,7 @@ export default function AssignmentOutput() {
             </div>
 
             {/* Student Info */}
-            <div className="px-10 py-5 border-b border-gray-100 space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 px-10 py-5 border-b border-gray-100">
               {[
                 { label: 'Name', key: 'name', placeholder: '________________' },
                 { label: 'Roll Number', key: 'rollNumber', placeholder: '____________' },
@@ -308,9 +316,11 @@ export default function AssignmentOutput() {
             )}
           </div>
 
+          </div>
+
           {/* Action Bar */}
-          <div className="flex items-center justify-between mt-6 pb-6">
-            <Link href="/" className="text-sm text-gray-400 hover:text-gray-600 transition-colors flex items-center gap-1.5">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mt-6 pb-6">
+            <Link href="/assignments" className="text-sm text-gray-400 hover:text-gray-600 transition-colors flex items-center gap-1.5">
               <ChevronLeft size={14} />
               Back to Dashboard
             </Link>
@@ -324,7 +334,7 @@ export default function AssignmentOutput() {
               </button>
               <button
                 onClick={() => printPaper(printRef.current)}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white transition-all hover:opacity-90"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white transition-all hover:opacity-90"
                 style={{ background: '#111' }}
               >
                 <Download size={14} />

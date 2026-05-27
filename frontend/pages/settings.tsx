@@ -63,7 +63,8 @@ export default function SettingsPage() {
       <div className="flex-1 md:ml-60 flex flex-col min-h-screen">
         <TopBar backLabel="Settings" />
 
-        <main className="flex-1 px-8 py-7 max-w-3xl">
+        <main className="flex-1 px-4 py-7 sm:px-6 lg:px-10">
+          <div className="max-w-3xl mx-auto">
           {/* Header */}
           <div className="flex items-center gap-2.5 mb-1">
             <span className="w-2.5 h-2.5 rounded-full bg-gray-500" />
@@ -160,6 +161,7 @@ export default function SettingsPage() {
                 Delete
               </button>
             </div>
+          </div>
           </div>
         </main>
       </div>

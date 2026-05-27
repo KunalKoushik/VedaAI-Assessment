@@ -161,10 +161,11 @@ export default function Dashboard() {
       {/* ── Main Content ────────────────────────────────────────── */}
       <div className="flex-1 md:ml-60 flex flex-col min-h-screen">
 
-        <TopBar backLabel="Assignment" />
+        <TopBar backLabel="Assignments" />
 
-        <main className="flex-1 px-8 py-7">
-          {isLoading ? (
+        <main className="flex-1 px-4 py-7 sm:px-6 lg:px-10">
+          <div className="max-w-7xl mx-auto">
+            {isLoading ? (
             <div className="flex items-center justify-center h-64">
               <div className="flex flex-col items-center gap-3">
                 <div className="w-8 h-8 rounded-full border-2 border-orange-500 border-t-transparent animate-spin" />
@@ -200,12 +201,12 @@ export default function Dashboard() {
               </div>
               <p className="text-sm text-gray-400 mb-6 pl-5">Manage and create assignments for your classes.</p>
 
-              <div className="flex items-center justify-between mb-6 gap-4">
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-6">
                 <button className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors">
                   <SlidersHorizontal size={15} />
                   Filter By
                 </button>
-                <div className="relative w-72">
+                <div className="relative flex-1 min-w-0 md:max-w-xs">
                   <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                   <input
                     type="text"
@@ -265,6 +266,7 @@ export default function Dashboard() {
               )}
             </>
           )}
+          </div>
         </main>
       </div>
 
