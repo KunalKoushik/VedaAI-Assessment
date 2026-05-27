@@ -2,10 +2,10 @@ import React, { useState, useRef, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import Link from 'next/link';
+import Sidebar from '@/components/Sidebar';
+import TopBar from '@/components/TopBar';
 import {
-  Home, Users, BookOpen, Wrench, Library,
-  Settings, Bell, ChevronDown, Sparkles,
-  Upload, X, Plus, Minus, Mic, ChevronLeft, ArrowRight
+  Upload, X, Plus, Minus, Mic, ChevronDown, ArrowRight, ChevronLeft,
 } from 'lucide-react';
 
 interface QuestionType {
@@ -23,22 +23,7 @@ const QUESTION_TYPE_OPTIONS = [
   'Fill in the Blanks',
 ];
 
-// ── VedaAI Logo ────────────────────────────────────────────────────
-function VedaLogo({ size = 32 }: { size?: number }) {
-  return (
-    <div
-      style={{
-        width: size, height: size, borderRadius: 8,
-        background: 'linear-gradient(135deg, #FF6B35 0%, #E84646 100%)',
-        flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }}
-    >
-      <span style={{ color: '#fff', fontWeight: 900, fontSize: size * 0.5, fontFamily: 'Georgia, serif' }}>V</span>
-    </div>
-  );
-}
-
-// ── Stepper Input (+/- number control) ────────────────────────────
+// ── Stepper (+/- number control) ─────────────────────────────────
 function Stepper({
   value, onChange, min = 1, max = 99
 }: {
@@ -65,7 +50,7 @@ function Stepper({
   );
 }
 
-// ── File Upload Zone ───────────────────────────────────────────────
+// ── File Upload Zone ──────────────────────────────────────────────
 function FileUploadZone({
   file, onFile, onClear
 }: {
@@ -121,7 +106,7 @@ function FileUploadZone({
             <Upload size={20} className="text-gray-400" />
           </div>
           <p className="text-sm font-medium text-gray-700 mb-1">Choose a file or drag &amp; drop it here</p>
-          <p className="text-xs text-gray-400 mb-4">JPEG, PNG, PDF, upto 10MB</p>
+          <p className="text-xs text-gray-400 mb-4">JPEG, PNG, PDF, up to 10MB</p>
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); inputRef.current?.click(); }}
@@ -136,7 +121,7 @@ function FileUploadZone({
   );
 }
 
-// ── Main Create Page ───────────────────────────────────────────────
+// ── Main Create Page ──────────────────────────────────────────────
 export default function CreateAssignment() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -219,92 +204,16 @@ export default function CreateAssignment() {
     }
   };
 
-  const navItems = [
-    { icon: Home, label: 'Home' },
-    { icon: Users, label: 'My Groups' },
-    { icon: BookOpen, label: 'Assignments' },
-    { icon: Wrench, label: "AI Teacher's Toolkit" },
-    { icon: Library, label: 'My Library', badge: 32 },
-  ];
-
   return (
-    <div className=" min-h-screen bg-[#F5F5F5] flex font-sans">
+    <div className="min-h-screen bg-[#F5F5F5] flex font-sans">
 
-      {/* ── SIDEBAR ────────────────────────────────────────────────── */}
-      <aside className="w-60 bg-white border-r border-gray-100 flex flex-col fixed h-full z-20 shadow-sm">
-        <div className="px-5 pt-5 pb-4">
-          <div className="flex items-center gap-2.5">
-            <VedaLogo size={34} />
-            <span className="text-xl font-bold text-gray-900 tracking-tight">VedaAI</span>
-          </div>
-        </div>
+      {/* ── Shared Sidebar ──────────────────────────────────────── */}
+      <Sidebar />
 
-        <div className="px-4 pb-5">
-          <Link
-            href="/create"
-            className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-full text-white text-sm font-semibold"
-            style={{ background: 'linear-gradient(135deg, #1a1a1a, #333)', boxShadow: '0 2px 8px rgba(0,0,0,0.18)' }}
-          >
-            <Sparkles size={14} />
-            Create Assignment
-          </Link>
-        </div>
+      {/* ── Main ────────────────────────────────────────────────── */}
+      <div className="flex-1 md:ml-60 flex flex-col min-h-screen">
 
-        <nav className="flex-1 px-3 space-y-0.5">
-          {navItems.map(({ icon: Icon, label, badge }) => (
-            <a
-              key={label}
-              href="#"
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-800 transition-colors"
-            >
-              <Icon size={15} className="text-gray-400" />
-              <span className="flex-1">{label}</span>
-              {badge && (
-                <span className="text-xs font-semibold px-1.5 py-0.5 rounded-full text-white"
-                  style={{ background: 'linear-gradient(135deg, #FF6B35, #E84646)' }}>
-                  {badge}
-                </span>
-              )}
-            </a>
-          ))}
-        </nav>
-
-        <div className="px-3 pb-5 space-y-0.5">
-          <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-gray-50 transition-colors">
-            <Settings size={15} />
-            Settings
-          </a>
-          <div className="mt-3 mx-1 p-3 bg-gray-50 rounded-xl flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">D</div>
-            <div className="min-w-0">
-              <p className="text-sm font-semibold text-gray-800 truncate">Delhi Public School</p>
-              <p className="text-xs text-gray-400 truncate">Bokaro Steel City</p>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      {/* ── MAIN ───────────────────────────────────────────────────── */}
-      <div className="  flex-1 ml-60 flex flex-col min-h-screen">
-
-        {/* Top Bar */}
-        <header className="bg-white border-b border-gray-100 px-8 py-3 flex items-center gap-3 sticky top-0 z-10 shadow-sm">
-          <Link href="/" className="p-1.5 text-gray-400 hover:text-gray-600">
-            <ChevronLeft size={18} />
-          </Link>
-          <span className="text-sm text-gray-400">Assignment</span>
-          <div className="ml-auto flex items-center gap-4">
-            <div className="relative">
-              <Bell size={18} className="text-gray-500" />
-              <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full text-white text-[8px] flex items-center justify-center font-bold">1</span>
-            </div>
-            <div className="flex items-center gap-2 cursor-pointer">
-              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-xs font-bold">J</div>
-              <span className="text-sm font-medium text-gray-700">John Doe</span>
-              <ChevronDown size={14} className="text-gray-400" />
-            </div>
-          </div>
-        </header>
+        <TopBar backHref="/" backLabel="Assignment" />
 
         {/* Page Title */}
         <div className="px-8 pt-7 pb-2">
@@ -315,7 +224,7 @@ export default function CreateAssignment() {
           <p className="text-sm text-gray-400 pl-5">Set up a new assignment for your students</p>
         </div>
 
-        {/* Progress Bar (step indicator) */}
+        {/* Progress Bar */}
         <div className="px-8 py-4">
           <div className="h-1.5 rounded-full bg-gray-200 overflow-hidden">
             <div className="h-full rounded-full bg-gray-800 transition-all" style={{ width: '55%' }} />
@@ -327,7 +236,6 @@ export default function CreateAssignment() {
           <form onSubmit={handleSubmit}>
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-7 max-w-3xl">
 
-              {/* Section header */}
               <div className="mb-6">
                 <h2 className="text-base font-bold text-gray-900">Assignment Details</h2>
                 <p className="text-xs text-gray-400 mt-0.5">Basic information about your assignment</p>
@@ -342,7 +250,7 @@ export default function CreateAssignment() {
                 />
               </div>
 
-              {/* Subject + Class row */}
+              {/* Subject + Class */}
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">Subject</label>
@@ -369,24 +277,19 @@ export default function CreateAssignment() {
               {/* Due Date */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">Due Date</label>
-                <div className="relative">
-                  <input
-                    type="date"
-                    required
-                    value={formData.dueDate}
-                    onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
-                    placeholder="DD-MM-YYYY"
-                    className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 bg-gray-50 transition-all appearance-none"
-                  />
-                </div>
+                <input
+                  type="date"
+                  required
+                  value={formData.dueDate}
+                  onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
+                  className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 bg-gray-50 transition-all appearance-none"
+                />
               </div>
 
               {/* Question Types */}
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-3">
-                  <div>
-                    <span className="text-sm font-semibold text-gray-800">Question Type</span>
-                  </div>
+                  <span className="text-sm font-semibold text-gray-800">Question Type</span>
                   <div className="flex items-center gap-8 pr-2">
                     <span className="text-xs font-medium text-gray-500">No. of Questions</span>
                     <span className="text-xs font-medium text-gray-500">Marks</span>
@@ -396,7 +299,6 @@ export default function CreateAssignment() {
                 <div className="space-y-3">
                   {formData.questionTypes.map((qt, i) => (
                     <div key={i} className="flex items-center gap-3">
-                      {/* Dropdown */}
                       <div className="relative flex-1">
                         <select
                           value={qt.type}
@@ -410,7 +312,6 @@ export default function CreateAssignment() {
                         <ChevronDown size={13} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                       </div>
 
-                      {/* Remove */}
                       <button
                         type="button"
                         onClick={() => removeQuestionType(i)}
@@ -419,22 +320,12 @@ export default function CreateAssignment() {
                         <X size={12} />
                       </button>
 
-                      {/* No. of Questions stepper */}
-                      <Stepper
-                        value={qt.numberOfQuestions}
-                        onChange={(v) => updateQT(i, 'numberOfQuestions', v)}
-                      />
-
-                      {/* Marks stepper */}
-                      <Stepper
-                        value={qt.marksPerQuestion}
-                        onChange={(v) => updateQT(i, 'marksPerQuestion', v)}
-                      />
+                      <Stepper value={qt.numberOfQuestions} onChange={(v) => updateQT(i, 'numberOfQuestions', v)} />
+                      <Stepper value={qt.marksPerQuestion} onChange={(v) => updateQT(i, 'marksPerQuestion', v)} />
                     </div>
                   ))}
                 </div>
 
-                {/* Add Question Type */}
                 <button
                   type="button"
                   onClick={addQuestionType}
@@ -446,7 +337,6 @@ export default function CreateAssignment() {
                   Add Question Type
                 </button>
 
-                {/* Totals */}
                 {totalQuestions > 0 && (
                   <div className="mt-4 flex flex-col items-end gap-0.5 text-sm font-medium text-gray-700">
                     <span>Total Questions : {totalQuestions}</span>
@@ -480,8 +370,8 @@ export default function CreateAssignment() {
           </form>
         </main>
 
-        {/* ── Bottom nav bar ──────────────────────────────────────── */}
-        <div className="fixed bottom-0 left-60 right-0 bg-white border-t border-gray-100 px-8 py-4 flex items-center justify-between">
+        {/* Bottom nav bar */}
+        <div className="fixed bottom-0 md:left-60 left-0 right-0 bg-white border-t border-gray-100 px-8 py-4 flex items-center justify-between z-10">
           <Link
             href="/"
             className="flex items-center gap-2 px-6 py-2.5 border border-gray-200 rounded-full text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
@@ -502,10 +392,7 @@ export default function CreateAssignment() {
                 Generating…
               </>
             ) : (
-              <>
-                Next
-                <ArrowRight size={15} />
-              </>
+              <>Next <ArrowRight size={15} /></>
             )}
           </button>
         </div>

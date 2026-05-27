@@ -3,32 +3,13 @@ import Link from 'next/link';
 import axios from 'axios';
 import { useAssignmentStore } from '@/store/AssignmentStore';
 import { useWebSocket } from '@/hooks/UseWebSocket';
+import Sidebar from '@/components/Sidebar';
+import TopBar from '@/components/TopBar';
 import {
-  Home, Users, BookOpen, Wrench, Library,
-  Settings, Bell, ChevronDown, Search, SlidersHorizontal,
-  MoreVertical, Eye, Trash2, Plus, Sparkles
+  MoreVertical, Eye, Trash2, Plus, SlidersHorizontal, Search,
 } from 'lucide-react';
 
-// ── VedaAI brand logo ──────────────────────────────────────────────
-function VedaLogo({ size = 32 }: { size?: number }) {
-  return (
-    <div
-      style={{ width: size, height: size, borderRadius: 8 }}
-      className="flex items-center justify-center"
-      style={{
-        width: size,
-        height: size,
-        borderRadius: 8,
-        background: 'linear-gradient(135deg, #FF6B35 0%, #E84646 100%)',
-        flexShrink: 0,
-      }}
-    >
-      <span style={{ color: '#fff', fontWeight: 900, fontSize: size * 0.5, fontFamily: 'Georgia, serif' }}>V</span>
-    </div>
-  );
-}
-
-// ── Empty state illustration (SVG) ────────────────────────────────
+// ── Empty state illustration ──────────────────────────────────────
 function EmptyIllustration() {
   return (
     <svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -52,7 +33,7 @@ function EmptyIllustration() {
   );
 }
 
-// ── Card 3-dot menu ────────────────────────────────────────────────
+// ── Card 3-dot menu ───────────────────────────────────────────────
 function AssignmentCardMenu({
   assignmentId, isCompleted, generatedPaperId, onDelete
 }: {
@@ -105,7 +86,7 @@ function AssignmentCardMenu({
   );
 }
 
-// ── Status badge ───────────────────────────────────────────────────
+// ── Status badge ──────────────────────────────────────────────────
 function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
     completed: 'bg-green-100 text-green-700',
@@ -125,7 +106,7 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-// ── Main Dashboard ─────────────────────────────────────────────────
+// ── Main Dashboard ────────────────────────────────────────────────
 export default function Dashboard() {
   const { assignments, setAssignments, updateAssignment, isLoading, setIsLoading } = useAssignmentStore();
   const { lastMessage } = useWebSocket();
@@ -171,116 +152,18 @@ export default function Dashboard() {
     a.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const navItems = [
-    { icon: Home, label: 'Home', active: false },
-    { icon: Users, label: 'My Groups', active: false },
-    { icon: BookOpen, label: 'Assignments', active: true, badge: assignments.length },
-    { icon: Wrench, label: "AI Teacher's Toolkit", active: false },
-    { icon: Library, label: 'My Library', active: false },
-  ];
-
   return (
-    <div className="min-h-screen bg-[#F5F5F5] flex  font-sans ">
+    <div className="min-h-screen bg-[#F5F5F5] flex font-sans">
 
-      {/* ── SIDEBAR ────────────────────────────────────────────────── */}
-      <aside className="w-60 bg-white border-r border-gray-100 flex flex-col fixed h-full z-20 shadow-sm">
-        {/* Logo */}
-        <div className="px-5 pt-5 pb-4">
-          <div className="flex items-center gap-2.5">
-            <VedaLogo size={36} />
-            <span className="text-xl font-bold text-gray-900 tracking-tight">VedaAI</span>
-          </div>
-        </div>
+      {/* ── Shared Sidebar ──────────────────────────────────────── */}
+      <Sidebar />
 
-        {/* Create Assignment CTA */}
-        <div className="px-4 pb-5">
-          <Link
-            href="/create"
-            className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-full text-white text-sm font-semibold transition-all hover:opacity-90 active:scale-95"
-            style={{ background: 'linear-gradient(135deg, #1a1a1a 0%, #333 100%)', boxShadow: '0 2px 8px rgba(0,0,0,0.18)' }}
-          >
-            <Sparkles size={15} />
-            Create Assignment
-          </Link>
-        </div>
+      {/* ── Main Content ────────────────────────────────────────── */}
+      <div className="flex-1 md:ml-60 flex flex-col min-h-screen">
 
-        {/* Navigation */}
-        <nav className="flex-1 px-3 space-y-0.5">
-          {navItems.map(({ icon: Icon, label, active, badge }) => (
-            <a
-              key={label}
-              href="#"
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
-                active
-                  ? 'bg-gray-100 text-gray-900 font-medium'
-                  : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'
-              }`}
-            >
-              <Icon size={16} className={active ? 'text-gray-700' : 'text-gray-400'} />
-              <span className="flex-1">{label}</span>
-              {badge && badge > 0 && (
-                <span className="text-xs font-semibold px-1.5 py-0.5 rounded-full text-white"
-                  style={{ background: 'linear-gradient(135deg, #FF6B35, #E84646)', minWidth: 20, textAlign: 'center' }}>
-                  {badge}
-                </span>
-              )}
-            </a>
-          ))}
-        </nav>
+        <TopBar backLabel="Assignment" />
 
-        {/* Bottom */}
-        <div className="px-3 pb-5 space-y-0.5">
-          <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-gray-50 hover:text-gray-700 transition-colors">
-            <Settings size={16} className="text-gray-400" />
-            Settings
-          </a>
-          <div className="mt-3 mx-1 p-3 bg-gray-50 rounded-xl flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
-              D
-            </div>
-            <div className="min-w-0">
-              <p className="text-sm font-semibold text-gray-800 truncate">Delhi Public School</p>
-              <p className="text-xs text-gray-400 truncate">Bokaro Steel City</p>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      {/* ── MAIN CONTENT ───────────────────────────────────────────── */}
-      <div className="flex-1 ml-60 flex flex-col min-h-screen">
-
-        {/* Top Bar */}
-        <header className="bg-white border-b border-gray-100 px-8 py-3 flex items-center gap-3 sticky top-0 z-10 shadow-sm">
-          <button className="p-1.5 text-gray-400 hover:text-gray-600">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <path d="M11 3L5 9L11 15" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          <div className="flex items-center gap-1.5 text-sm text-gray-400">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <rect x="1" y="1" width="4.5" height="4.5" rx="1" fill="currentColor" opacity="0.5"/>
-              <rect x="8.5" y="1" width="4.5" height="4.5" rx="1" fill="currentColor" opacity="0.5"/>
-              <rect x="1" y="8.5" width="4.5" height="4.5" rx="1" fill="currentColor" opacity="0.5"/>
-              <rect x="8.5" y="8.5" width="4.5" height="4.5" rx="1" fill="currentColor" opacity="0.5"/>
-            </svg>
-            Assignment
-          </div>
-          <div className="ml-auto flex items-center gap-4">
-            <div className="relative">
-              <Bell size={18} className="text-gray-500" />
-              <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full text-white text-[8px] flex items-center justify-center font-bold">1</span>
-            </div>
-            <div className="flex items-center gap-2 cursor-pointer">
-              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-xs font-bold">J</div>
-              <span className="text-sm font-medium text-gray-700">John Doe</span>
-              <ChevronDown size={14} className="text-gray-400" />
-            </div>
-          </div>
-        </header>
-
-        {/* Page Content */}
         <main className="flex-1 px-8 py-7">
-
           {isLoading ? (
             <div className="flex items-center justify-center h-64">
               <div className="flex flex-col items-center gap-3">
@@ -311,14 +194,12 @@ export default function Dashboard() {
           ) : (
             /* ── FILLED STATE ── */
             <>
-              {/* Section Header */}
               <div className="flex items-center gap-2.5 mb-1">
                 <span className="w-2.5 h-2.5 rounded-full bg-green-500 shadow-sm shadow-green-300" />
                 <h1 className="text-xl font-bold text-gray-900">Assignments</h1>
               </div>
               <p className="text-sm text-gray-400 mb-6 pl-5">Manage and create assignments for your classes.</p>
 
-              {/* Filter + Search Row */}
               <div className="flex items-center justify-between mb-6 gap-4">
                 <button className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors">
                   <SlidersHorizontal size={15} />
@@ -336,7 +217,6 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Cards Grid */}
               {filtered.length === 0 ? (
                 <div className="text-center py-12 text-gray-400 text-sm">No results for "{searchTerm}"</div>
               ) : (
@@ -388,7 +268,7 @@ export default function Dashboard() {
         </main>
       </div>
 
-      {/* ── FLOATING CREATE BUTTON (when assignments exist) ─────── */}
+      {/* ── Floating Create Button ──────────────────────────────── */}
       {assignments.length > 0 && (
         <Link
           href="/create"
