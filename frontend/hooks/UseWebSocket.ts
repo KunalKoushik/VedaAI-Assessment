@@ -13,8 +13,9 @@ export function useWebSocket() {
   const [lastMessage, setLastMessage] = useState<WebSocketMessage | null>(null);
 
   useEffect(() => {
-    const ws = new WebSocket('ws://localhost:5002');
-    
+    const WS_URL = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:5002';
+    const ws = new WebSocket(WS_URL);
+
     ws.onopen = () => {
       console.log('WebSocket connected');
       setSocket(ws);
@@ -39,7 +40,9 @@ export function useWebSocket() {
     };
     
     return () => {
-      ws.close();
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.close();
+      }
     };
   }, []);
   
