@@ -3,9 +3,8 @@ import redisClient from '../config/Redis';
 import Redis from 'ioredis';
 import Assignment from '../models/Assignment';
 import QuestionPaper from '../models/QuestionPaper';
-import { generateQuestionPaper } from '../services/AiService'; // Adjust path if needed
+import { generateQuestionPaper } from '../services/AiService';
 
-// Separate Redis client for pub/sub
 const redisPub = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
   maxRetriesPerRequest: null,
 });
@@ -16,12 +15,19 @@ const worker = new Worker(
   'question-generation',
   async (job) => {
     console.log(`Processing job ${job.id}`);
-    const { assignmentId, formData } = job.data;
+    // pdfBase64 and pdfMimeType are passed through from the controller
+    const { assignmentId, formData, pdfBase64, pdfMimeType } = job.data;
 
     try {
       await Assignment.findByIdAndUpdate(assignmentId, { status: 'generating' });
-      const generated = await generateQuestionPaper(formData);
-      
+
+      // Pass PDF data through to the AI service
+      const generated = await generateQuestionPaper({
+        ...formData,
+        pdfBase64: pdfBase64 || null,
+        pdfMimeType: pdfMimeType || null,
+      });
+
       const questionPaper = new QuestionPaper({
         assignmentId,
         subject: formData.subject,
@@ -38,7 +44,6 @@ const worker = new Worker(
         generatedPaperId: saved._id,
       });
 
-      // Publish completion event for WebSocket
       await redisPub.publish(JOB_COMPLETION_CHANNEL, JSON.stringify({
         type: 'GENERATION_COMPLETED',
         assignmentId,
@@ -50,15 +55,12 @@ const worker = new Worker(
     } catch (error) {
       console.error(`Job ${job.id} failed:`, error);
       await Assignment.findByIdAndUpdate(assignmentId, { status: 'failed' });
-      
-      // Publish failure event
       await redisPub.publish(JOB_COMPLETION_CHANNEL, JSON.stringify({
         type: 'GENERATION_FAILED',
         assignmentId,
         status: 'failed',
         error: error instanceof Error ? error.message : 'Unknown error',
       }));
-      
       throw error;
     }
   },
@@ -66,5 +68,4 @@ const worker = new Worker(
 );
 
 console.log('✅ Generation worker started');
-
 export default worker;

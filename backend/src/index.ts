@@ -17,7 +17,10 @@ const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
 app.use(cors());
-app.use(express.json());
+
+// ── Increase JSON body limit to 15 MB to handle base64-encoded PDFs ──
+app.use(express.json({ limit: '15mb' }));
+app.use(express.urlencoded({ limit: '15mb', extended: true }));
 
 // Routes
 app.use('/api/question-papers', questionPaperRoutes);
@@ -38,7 +41,6 @@ const redisSub = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
 // Store active WebSocket connections
 const clients = new Map<string, WebSocket>();
 
-// WebSocket connection handling
 wss.on('connection', (ws: WebSocket) => {
   const clientId = Math.random().toString(36).substring(7);
   clients.set(clientId, ws);
@@ -59,30 +61,21 @@ wss.on('connection', (ws: WebSocket) => {
   });
 });
 
-// Subscribe to Redis channel for job completion events
 const JOB_COMPLETION_CHANNEL = 'job:completed';
 
 redisSub.subscribe(JOB_COMPLETION_CHANNEL, (err) => {
-  if (err) {
-    console.error('Failed to subscribe to channel:', err);
-  } else {
-    console.log(`✅ Subscribed to Redis channel: ${JOB_COMPLETION_CHANNEL}`);
-  }
+  if (err) console.error('Failed to subscribe to channel:', err);
+  else console.log(`✅ Subscribed to Redis channel: ${JOB_COMPLETION_CHANNEL}`);
 });
 
 redisSub.on('message', (channel, message) => {
   if (channel === JOB_COMPLETION_CHANNEL) {
-    console.log('Job completion event received:', message);
-    // Broadcast to all connected WebSocket clients
     clients.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(message);
-      }
+      if (client.readyState === WebSocket.OPEN) client.send(message);
     });
   }
 });
 
-// Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date() });
 });
