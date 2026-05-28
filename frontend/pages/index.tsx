@@ -115,6 +115,12 @@ export default function Dashboard() {
   useEffect(() => { fetchAssignments(); }, []);
 
   useEffect(() => {
+    if (!assignments.some((assignment) => assignment.status === 'generating')) return;
+    const interval = setInterval(fetchAssignments, 5000);
+    return () => clearInterval(interval);
+  }, [assignments]);
+
+  useEffect(() => {
     if (!lastMessage) return;
     if (lastMessage.type === 'GENERATION_COMPLETED') {
       updateAssignment(lastMessage.assignmentId, {
